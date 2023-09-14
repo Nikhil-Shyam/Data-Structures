@@ -8,6 +8,7 @@ public class GleamingTheCube {
             File file = new File("CubeInput.txt");
             BufferedReader input = new BufferedReader(new FileReader(file));
 
+            // initializing variables
             String st;
             int tempDown;
             int tempUp;
@@ -17,15 +18,22 @@ public class GleamingTheCube {
             int tempWest;
 
             while ((st = input.readLine()) != null){
+                // array that represents my cube, inside the while loops because i want a new dice for each line
                 // up, south, down, north, west, east
                 int[] arr = {1, 5, 6, 2, 3, 4};
+                
+                // for loop to go through the line, one letter at a time
                 for (int i = 0; i < st.length(); i++){
+                    // making temp variables that represent each side of the cube so i can use it later
+                    // inside the for loop because every time i roll the dice i want it to say just for the line
                     tempUp = arr[0];
                     tempDown = arr[2];
                     tempSouth = arr[1];
                     tempNorth = arr[3];
                     tempEast = arr[5];
                     tempWest = arr[4];
+
+                    // checking what individual letter says and "rotate" the cube based on that
                     if (st.substring(i, i+1).equals("N")){
                         arr[0] = tempSouth;
                         arr[1] = tempDown;
@@ -48,6 +56,8 @@ public class GleamingTheCube {
                         arr[4] = tempUp;
                     }
                 }
+
+                // print out the top part of the dice
                 System.out.println(arr[0]);
             }
 
