@@ -3,7 +3,7 @@ import java.io.*;
 public class Template {
     public Template(){
         try{
-            File file = new File("CubeInput.txt");
+            File file = new File("FileName.txt");
             BufferedReader input = new BufferedReader(new FileReader(file));
 
             String st;
