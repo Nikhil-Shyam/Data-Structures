@@ -1,6 +1,7 @@
 import java.io.*;
 
 // fuck this code it works but it's only like 98% perfect
+// i couldn't figure out how to deal with the double 'B' thing and holding a guitar string from the top
 // i can't be bothered to explain this so good luck
 
 public class GuitarHero {
