@@ -1,5 +1,8 @@
 import java.io.*;
 
+// fuck this code it works but it's only like 98% perfect
+// i can't be bothered to explain this so good luck
+
 public class GuitarHero {
     public GuitarHero(){
         try{
