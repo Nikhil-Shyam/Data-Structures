@@ -46,15 +46,6 @@ public class GuitarHero {
                 ans[i] = ult;
             }
 
-            for (String[] i: measures){
-                for (String j: i)
-                    System.out.print(j + " ");
-                System.out.println();
-            }
-            System.out.println();
-            for (String i: ans)
-                System.out.println(i);
-
             System.out.print("Measure\t");
             for (int i = 1; i <= measureCount; i++){
                 System.out.print(i + "\t");
