@@ -27,7 +27,7 @@ public class MazeProgram extends JPanel implements KeyListener {
 
     public void setMaze(){
         try{
-            File file = new File("/Users/nikhilshyam/Desktop/Data Structures/Template/maze.txt");
+            File file = new File("maze.txt");
             BufferedReader input = new BufferedReader(new FileReader(file));
             String st;
             int row = 0;
