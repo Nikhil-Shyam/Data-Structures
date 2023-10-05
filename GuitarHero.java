@@ -68,7 +68,12 @@ public class GuitarHero {
             for (int i = 0; i < output.length; i++){
                 System.out.print(notes[i] + "\t");
                 for (int j = 0; j < output[i].length; j++){
-                    System.out.print(output[i][j] + "\t");
+                    if(i==9 && output[i][j].equals(output[i+1][j])){
+                        continue;
+                    }
+                    else{
+                        System.out.print(output[i][j] + "\t");
+                    }
                 }
                 System.out.println();
             }
