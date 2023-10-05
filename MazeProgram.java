@@ -7,6 +7,7 @@ public class MazeProgram extends JPanel implements KeyListener {
     JFrame frame;
 
     int x,y;
+    int dir;
     int dim = 20;
     String[][] maze;
 
@@ -18,6 +19,7 @@ public class MazeProgram extends JPanel implements KeyListener {
 
         x = 1;
         y = 1;
+        dir = 0;
 
         setMaze();
 
@@ -27,7 +29,7 @@ public class MazeProgram extends JPanel implements KeyListener {
 
     public void setMaze(){
         try{
-            File file = new File("maze.txt");
+            File file = new File("/Users/nikhilshyam/Desktop/Data Structures/Template/maze.txt");
             BufferedReader input = new BufferedReader(new FileReader(file));
             String st;
             int row = 0;
@@ -35,8 +37,27 @@ public class MazeProgram extends JPanel implements KeyListener {
             while ((st = input.readLine())!= null){
                 String[] rowOfWalls = st.split("");
                 maze[row] = rowOfWalls;
-                if(st.indexOf("H") >= 0){
-                    x = st.indexOf("H");
+                if(st.indexOf("N") >= 0){
+                    dir = 0;
+                    x = st.indexOf("N");
+                    y = row;
+                    maze[y][x] = " ";
+                }
+                if(st.indexOf("E") >= 0){
+                    dir = 2;
+                    x = st.indexOf("E");
+                    y = row;
+                    maze[y][x] = " ";
+                }
+                if(st.indexOf("W") >= 0){
+                    dir = 3;
+                    x = st.indexOf("W");
+                    y = row;
+                    maze[y][x] = " ";
+                }
+                if(st.indexOf("S") >= 0){
+                    dir = 2;
+                    x = st.indexOf("S");
                     y = row;
                     maze[y][x] = " ";
                 }
@@ -77,15 +98,58 @@ public class MazeProgram extends JPanel implements KeyListener {
     public void keyReleased(KeyEvent e){
     }
     public void keyPressed(KeyEvent e){
+        // 0 - N | 1 - E | 2 - S | 3 - W
         System.out.println(e.getKeyCode());
-        if (e.getKeyCode() == 37 && maze[y][x-1].equals(" "))
-            x-=1;
-        if (e.getKeyCode() == 38 && maze[y-1][x].equals(" "))
-            y-=1;
-        if (e.getKeyCode() == 40 && maze[y+1][x].equals(" "))
-            y+=1;
-        if (e.getKeyCode() == 39 && maze[y][x+1].equals(" "))
-            x+=1;
+        if (e.getKeyCode() == 37){ // turning left
+            dir--;
+            if (dir < 0)
+                dir = 3;
+        }
+        if (e.getKeyCode() == 38){ // walking forwards
+            switch(dir){
+                case 0:
+                    if (maze[y-1][x].equals(" "))
+                        y--;
+                    break;
+                case 1:
+                    if (maze[y][x+1].equals(" "))
+                        x++;
+                    break;
+                case 2:
+                    if (maze[y+1][x].equals(" "))
+                        y++;
+                    break;
+                case 3:
+                    if (maze[y][x-1].equals(" "))
+                        x--;
+                    break;
+            }
+        }
+        if (e.getKeyCode() == 39){ // turning right
+            dir++;
+            if (dir > 3)
+                dir = 0;
+        }
+        if (e.getKeyCode() == 40){ // walking backwards
+            switch(dir){
+                case 0:
+                    if (maze[y+1][x].equals(" "))
+                        y++;
+                    break;
+                case 1:
+                    if (maze[y][x-1].equals(" "))
+                        x--;
+                    break;
+                case 2:
+                    if (maze[y-1][x].equals(" "))
+                        y--;
+                    break;
+                case 3:
+                    if (maze[y][x+1].equals(" "))
+                        x++;
+                    break;
+            }
+        }
         repaint();
     }
     public void keyTyped(KeyEvent e){
