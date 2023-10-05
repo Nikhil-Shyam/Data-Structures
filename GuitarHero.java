@@ -1,7 +1,6 @@
 import java.io.*;
 
 // HIIIIIIIII -Kris
-
 // fuck this code it works but it's only like 98% perfect
 // i couldn't figure out how to deal with the double 'B' thing and holding a guitar string from the bottom
 // i can't be bothered to explain this so good luck
@@ -54,7 +53,7 @@ public class GuitarHero {
                 System.out.print(i + "\t");
             }
             System.out.println();
-            
+
             String[][] output = new String[30][measureCount];
             for (int i = 0; i < ans.length; i++){
                 for (int j = 0; j < ans[i].length(); j++){
@@ -66,7 +65,8 @@ public class GuitarHero {
             }
             
             for (int i = 0; i < output.length; i++){
-                System.out.print(notes[i] + "\t");
+                if (i != 9)
+                    System.out.print(notes[i] + "\t");
                 for (int j = 0; j < output[i].length; j++){
                     if(i==9 && output[i][j].equals(output[i+1][j])){
                         continue;
@@ -75,7 +75,8 @@ public class GuitarHero {
                         System.out.print(output[i][j] + "\t");
                     }
                 }
-                System.out.println();
+                if (i != 9)
+                    System.out.println();
             }
         }
         catch(IOException e){
