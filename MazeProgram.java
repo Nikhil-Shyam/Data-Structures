@@ -2,6 +2,7 @@ import java.io.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import java.util.ArrayList;
 
 public class MazeProgram extends JPanel implements KeyListener {
     JFrame frame;
@@ -10,6 +11,10 @@ public class MazeProgram extends JPanel implements KeyListener {
     int dir;
     int dim = 20;
     String[][] maze;
+    int dist = 50;
+
+    ArrayList<Wall> walls;
+    boolean in3D = false;
 
     public MazeProgram(){
         frame = new JFrame();
@@ -78,26 +83,27 @@ public class MazeProgram extends JPanel implements KeyListener {
         g.fillRect(0, 0, frame.getWidth(), frame.getHeight());
 
         g2.setStroke(new BasicStroke(2));
-        for(int i = 0; i < maze.length; i++){
-            for (int j = 0; j < maze[i].length; j++){
-                if (maze[i][j].equals("#")){
-                    g.setColor(new Color(74, 17, 132)); //74, 17, 132 //44, 9, 119in //181, 94, 221pi
-                    g.fillRect(j*dim+40, i*dim+40, dim, dim);
-                    g.setColor(Color.BLACK);
-                    g.drawRect(j*dim+40, i*dim+40, dim, dim);
+        if (!in3D){
+            for(int i = 0; i < maze.length; i++){
+                for (int j = 0; j < maze[i].length; j++){
+                    if (maze[i][j].equals("#")){
+                        g.setColor(new Color(74, 17, 132)); //74, 17, 132 //44, 9, 119in //181, 94, 221pi
+                        g.fillRect(j*dim+40, i*dim+40, dim, dim);
+                        g.setColor(Color.BLACK);
+                        g.drawRect(j*dim+40, i*dim+40, dim, dim);
+                    }
                 }
             }
+
+            g.setColor(new Color(150, 150, 250));
+            g.fillOval(x*dim+40, y*dim+40, dim, dim);
+            g.setColor(Color.CYAN);
+            g.drawOval(x*dim+40, y*dim+40, dim, dim);
+        }else{
+            for (Wall wall: walls){
+                g2.fill(wall.getWall());
+            }
         }
-
-        g.setColor(new Color(150, 150, 250));
-        g.fillOval(x*dim+40, y*dim+40, dim, dim);
-        g.setColor(Color.CYAN);
-        g.drawOval(x*dim+40, y*dim+40, dim, dim);
-
-        /*g.setColor(Color.WHITE);
-        for (int i = 0; i < 300; i++){
-            g.fillRect((int)(Math.random()*frame.getWidth()+1), (int)(Math.random()*frame.getHeight()+1), 2, 2);
-        }*/
     }
     
     public void keyReleased(KeyEvent e){
@@ -154,10 +160,32 @@ public class MazeProgram extends JPanel implements KeyListener {
                     break;
             }
         }
+
+        if(e.getKeyCode() == 32){
+            in3D =! in3D;
+        }
+
         repaint();
     }
     public void keyTyped(KeyEvent e){
     }
+
+    public class Wall{
+        private int[] y;
+        private int[] x;
+        private int dist;
+        
+        public Wall(int[] x, int[] y, int disc){
+            this.x = x;
+            this.y = y;
+            this.dist = dist;
+        }
+
+        public Polygon getWall(){
+            return new Polygon(x,y,x.length);
+        }
+    }
+
     public static void main(String[] args){
         MazeProgram app = new MazeProgram();
     }
