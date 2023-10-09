@@ -77,11 +77,6 @@ public class MazeProgram extends JPanel implements KeyListener {
         g.setColor(new Color(13, 3, 35)); //13, 3, 35
         g.fillRect(0, 0, frame.getWidth(), frame.getHeight());
 
-        g.setColor(Color.WHITE);
-        for (int i = 0; i < starX.length; i++){
-            g.fillRect(starX[i], starY[i], 1, 1);
-        }
-
         g2.setStroke(new BasicStroke(2));
         for(int i = 0; i < maze.length; i++){
             for (int j = 0; j < maze[i].length; j++){
