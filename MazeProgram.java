@@ -163,9 +163,28 @@ public class MazeProgram extends JPanel implements KeyListener {
 
     public void addLeftWalls(){
         for (int i = 0; i < 5; i++){
-            int[] x = {100+dist*i, 150+dist*i, 150+dist*i, 100+dist*i};
-            int[] y = {100+dist*i, 150+dist*i, 650-dist*i, 700-dist*i};
-            walls.add(new Wall(x, y, 50));
+            try{
+                if (dir == 0 && maze[y-i][x-1].equals("#")){
+                    int[] x = {100+dist*i, 150+dist*i, 150+dist*i, 100+dist*i};
+                    int[] y = {100+dist*i, 150+dist*i, 650-dist*i, 700-dist*i};
+                    walls.add(new Wall(x, y, 50));
+                }
+                if (dir == 1 && maze[y-1][x+i].equals("#")){
+                    int[] x = {100+dist*i, 150+dist*i, 150+dist*i, 100+dist*i};
+                    int[] y = {100+dist*i, 150+dist*i, 650-dist*i, 700-dist*i};
+                    walls.add(new Wall(x, y, 50));
+                }
+                if (dir == 2 && maze[y+i][x+1].equals("#")){
+                    int[] x = {100+dist*i, 150+dist*i, 150+dist*i, 100+dist*i};
+                    int[] y = {100+dist*i, 150+dist*i, 650-dist*i, 700-dist*i};
+                    walls.add(new Wall(x, y, 50));
+                }
+                if (dir == 3 && maze[y+1][x-i].equals("#")){
+                    int[] x = {100+dist*i, 150+dist*i, 150+dist*i, 100+dist*i};
+                    int[] y = {100+dist*i, 150+dist*i, 650-dist*i, 700-dist*i};
+                    walls.add(new Wall(x, y, 50));
+                }
+            }catch(ArrayIndexOutOfBoundsException e){}
         }
     }
 
