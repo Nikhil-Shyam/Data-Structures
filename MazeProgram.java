@@ -148,7 +148,8 @@ public class MazeProgram extends JPanel implements KeyListener {
             in3D =! in3D;
         }
         if (in3D){
-            addLeftWals();
+            walls = new ArrayList<Wall>();
+            addLeftWalls();
             //addRightWalls();
             //addFloors();
             //addCeilings();
@@ -157,6 +158,13 @@ public class MazeProgram extends JPanel implements KeyListener {
 
         repaint();
     }
+
+    public void addLeftWalls(){
+        int[] x = {100, 150, 150, 100};
+        int[] y = {100, 150, 650, 700};
+        walls.add(new Wall(x, y, dist));
+    }
+
     public void keyTyped(KeyEvent e){
     }
 
@@ -165,7 +173,7 @@ public class MazeProgram extends JPanel implements KeyListener {
         private int[] x;
         private int dist;
         
-        public Wall(int[] x, int[] y, int disc){
+        public Wall(int[] x, int[] y, int dist){
             this.x = x;
             this.y = y;
             this.dist = dist;
