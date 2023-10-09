@@ -103,8 +103,10 @@ public class MazeProgram extends JPanel implements KeyListener {
             g.drawOval(x*dim+40, y*dim+40, dim, dim);
         }else{
             for (Wall wall: walls){
-                g.setColor(Color.YELLOW);
+                g.setColor(new Color(74, 17, 132));
                 g2.fill(wall.getWall());
+                g.setColor(Color.BLACK);
+                g2.draw(wall.getWall());
             }
         }
     }
@@ -160,9 +162,11 @@ public class MazeProgram extends JPanel implements KeyListener {
     }
 
     public void addLeftWalls(){
-        int[] x = {100, 150, 150, 100};
-        int[] y = {100, 150, 650, 700};
-        walls.add(new Wall(x, y, dist));
+        for (int i = 0; i < 5; i++){
+            int[] x = {100+dist*i, 150+dist*i, 150+dist*i, 100+dist*i};
+            int[] y = {100+dist*i, 150+dist*i, 650-dist*i, 700-dist*i};
+            walls.add(new Wall(x, y, 50));
+        }
     }
 
     public void keyTyped(KeyEvent e){
