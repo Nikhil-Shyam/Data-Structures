@@ -44,7 +44,7 @@ public class MazeProgram extends JPanel implements KeyListener {
                     maze[y][x] = " ";
                 }
                 if(st.indexOf("E") >= 0){
-                    dir = 2;
+                    dir = 1;
                     x = st.indexOf("E");
                     y = row;
                     maze[y][x] = " ";
@@ -74,14 +74,19 @@ public class MazeProgram extends JPanel implements KeyListener {
 
         Graphics2D g2 = (Graphics2D)g;
 
-        g.setColor(new Color(50, 50, 50));
+        g.setColor(new Color(13, 3, 35)); //13, 3, 35
         g.fillRect(0, 0, frame.getWidth(), frame.getHeight());
+
+        g.setColor(Color.WHITE);
+        for (int i = 0; i < starX.length; i++){
+            g.fillRect(starX[i], starY[i], 1, 1);
+        }
 
         g2.setStroke(new BasicStroke(2));
         for(int i = 0; i < maze.length; i++){
             for (int j = 0; j < maze[i].length; j++){
                 if (maze[i][j].equals("#")){
-                    g.setColor(Color.YELLOW);
+                    g.setColor(new Color(74, 17, 132)); //74, 17, 132 //44, 9, 119in //181, 94, 221pi
                     g.fillRect(j*dim+40, i*dim+40, dim, dim);
                     g.setColor(Color.BLACK);
                     g.drawRect(j*dim+40, i*dim+40, dim, dim);
@@ -93,6 +98,11 @@ public class MazeProgram extends JPanel implements KeyListener {
         g.fillOval(x*dim+40, y*dim+40, dim, dim);
         g.setColor(Color.CYAN);
         g.drawOval(x*dim+40, y*dim+40, dim, dim);
+
+        /*g.setColor(Color.WHITE);
+        for (int i = 0; i < 300; i++){
+            g.fillRect((int)(Math.random()*frame.getWidth()+1), (int)(Math.random()*frame.getHeight()+1), 2, 2);
+        }*/
     }
     
     public void keyReleased(KeyEvent e){
@@ -127,8 +137,7 @@ public class MazeProgram extends JPanel implements KeyListener {
         }
         if (e.getKeyCode() == 39){ // turning right
             dir++;
-            if (dir > 3)
-                dir = 0;
+            dir%=4;
         }
         if (e.getKeyCode() == 40){ // walking backwards
             switch(dir){
