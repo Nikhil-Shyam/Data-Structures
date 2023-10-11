@@ -5,6 +5,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import java.util.ArrayList;
+import java.awt.GradientPaint;
 
 public class MazeProgram extends JPanel implements KeyListener {
     JFrame frame;
@@ -16,7 +17,6 @@ public class MazeProgram extends JPanel implements KeyListener {
     int dist = 50;
 
     ArrayList<Wall> walls;
-    ArrayList<Wall> wallBorder;
     boolean in3D = false;
 
     public MazeProgram(){
@@ -103,19 +103,10 @@ public class MazeProgram extends JPanel implements KeyListener {
             g.setColor(Color.CYAN);
             g.drawOval(x*dim+40, y*dim+40, dim, dim);
         }else{
-            /*g. setColor(new Color(74, 17, 132, 100));
-            int[] xl = {100, 350, 350, 100};
-            int[] yl = {100, 350, 450, 700};
-            Wall leftShade = new Wall(xl, yl, 50);
-            g2.fill(leftShade.getWall());
-            int[] xr = {700, 1, 1, 700};
-            int[] yr = {100, 1, 1, 700};
-            WallrightShade = new Wall();*/
-
             for(int i = 0; i < maze.length; i++){
                 for (int j = 0; j < maze[i].length; j++){
                     if (maze[i][j].equals("#")){
-                        g.setColor(new Color(74, 17, 132)); //74, 17, 132 //44, 9, 119in //181, 94, 221pi
+                        g.setColor(new Color(74, 17, 132));
                         g.fillRect(j*10+800, i*10+200, 10, 10);
                         g.setColor(Color.BLACK);
                         g.drawRect(j*10+800, i*10+200, 10, 10);
@@ -127,12 +118,10 @@ public class MazeProgram extends JPanel implements KeyListener {
             g.setColor(Color.CYAN);
             g.drawOval(x*10+800, y*10+200, 10, 10);
 
-            for (Wall wall: wallBorder){
-                g.setColor(Color.BLACK);
-                g2.draw(wall.getWall());
-            }
+
+
             for (Wall wall: walls){
-                g.setColor(wall.getColor());
+                g2.setPaint(wall.getGradientPaint());
                 g2.fill(wall.getWall());
                 g.setColor(Color.BLACK);
                 g2.draw(wall.getWall());
@@ -180,31 +169,27 @@ public class MazeProgram extends JPanel implements KeyListener {
         }
         if (in3D){
             walls = new ArrayList<Wall>();
-            wallBorder = new ArrayList<Wall>();
             addLeftHallways();
-            addRightHallways();
+            //addRightHallways();
             addLeftWalls();
             addRightWalls();
             addFloors();
             addCeilings();
-            addFrontWalls();
+            //addFrontWalls();
         }
 
         repaint();
     }
 
     public void addLeftHallways(){
-        int r = 205;
-        int g = 205;
-        int b = 205;
         for (int i = 0; i < 5; i++){
             try{
                 int[] x = {100+dist*i, 150+dist*i, 150+dist*i, 100+dist*i};
                 int[] y = {100+dist*i, 150+dist*i, 650-dist*i, 700-dist*i};
-                walls.add(new Wall(x, y, 50, new Color(r, g, b)));
+                walls.add(new Wall(x, y, 50, new GradientPaint(100, 400, new Color(205, 205, 205), 350, 400, Color.BLACK)));
                 x = new int[] {100+dist*i, 150+dist*i, 150+dist*i, 100+dist*i};
                 y = new int[] {150+dist*i, 150+dist*i, 650-dist*i, 650-dist*i};
-                walls.add(new Wall(x, y, 50, new Color(r, g, b)));
+                walls.add(new Wall(x, y, 50, new GradientPaint(100, 400, new Color(205, 205, 205), 350, 400, Color.BLACK)));
             }catch(ArrayIndexOutOfBoundsException e){}
         }
     }
@@ -217,158 +202,89 @@ public class MazeProgram extends JPanel implements KeyListener {
             try{
                 int[] x = {700-dist*i, 650-dist*i, 650-dist*i, 700-dist*i};
                 int[] y = {100+dist*i, 150+dist*i, 650-dist*i, 700-dist*i};
-                walls.add(new Wall(x, y, 50, new Color(r, g, b)));
+                walls.add(new Wall(x, y, 50, new GradientPaint(700, 400, new Color(205, 205, 205), 450, 400, Color.BLACK)));
                 x = new int[] {700-dist*i, 650-dist*i, 650-dist*i, 700-dist*i};
                 y = new int[] {150+dist*i, 150+dist*i, 650-dist*i, 650-dist*i};
-                walls.add(new Wall(x, y, 50, new Color(r, g, b)));
+                walls.add(new Wall(x, y, 50, new GradientPaint(700, 400, new Color(205, 205, 205), 450, 400, Color.BLACK)));
             }catch(ArrayIndexOutOfBoundsException e){}
         }
     }
 
-    /*public void addLeftWalls(){ // TEST METHOD
-    int r = 255;
-    int g = 255;
-    int b = 255;
-        for (int i = 0; i < 5; i++){    
-            try{
-                if (dir == 0 && maze[y-i][x-1].equals("#")){
-                    int[] x = {100+dist*i, 150+dist*i, 150+dist*i, 100+dist*i};
-                    int[] y = {100+dist*i, 150+dist*i, 650-dist*i, 700-dist*i};
-                    wallBorder.add(new Wall(x, y, 50, new Color(r, g, b)));
-                }
-                if (dir == 1 && maze[y-1][x+i].equals("#")){
-                    int[] x = {100+dist*i, 150+dist*i, 150+dist*i, 100+dist*i};
-                    int[] y = {100+dist*i, 150+dist*i, 650-dist*i, 700-dist*i};
-                    wallBorder.add(new Wall(x, y, 50, new Color(r, g, b)));
-                }
-                if (dir == 2 && maze[y+i][x+1].equals("#")){
-                    int[] x = {100+dist*i, 150+dist*i, 150+dist*i, 100+dist*i};
-                    int[] y = {100+dist*i, 150+dist*i, 650-dist*i, 700-dist*i};
-                    wallBorder.add(new Wall(x, y, 50, new Color(r, g, b)));
-                }
-                if (dir == 3 && maze[y+1][x-i].equals("#")){
-                    int[] x = {100+dist*i, 150+dist*i, 150+dist*i, 100+dist*i};
-                    int[] y = {100+dist*i, 150+dist*i, 650-dist*i, 700-dist*i};
-                    wallBorder.add(new Wall(x, y, 50, new Color(r, g, b)));
-                }
-            }catch(ArrayIndexOutOfBoundsException e){}
-            for (int j = 0; j < 50; j++){
-                try{
-                    if (dir == 0 && maze[y-i][x-1].equals("#")){
-                        int[] x = {(100+j)+dist*i, (150+j)+dist*i, (150+j)+dist*i, (100+j)+dist*i};
-                        int[] y = {(100+j)+dist*i, (150+j)+dist*i, (650-j)+dist*i, (700-j)+dist*i};
-                        walls.add(new Wall(x, y, 50, new Color(r, g, b)));
-                    }
-                    if (dir == 1 && maze[y-1][x+i].equals("#")){
-                        int[] x = {(100+j)+dist*i, (150+j)+dist*i, (150+j)+dist*i, (100+j)+dist*i};
-                        int[] y = {(100+j)+dist*i, (150+j)+dist*i, (650-j)+dist*i, (700-j)+dist*i};
-                        walls.add(new Wall(x, y, 50, new Color(r, g, b)));
-                    }
-                    if (dir == 2 && maze[y+i][x+1].equals("#")){
-                        int[] x = {(100+j)+dist*i, (150+j)+dist*i, (150+j)+dist*i, (100+j)+dist*i};
-                        int[] y = {(100+j)+dist*i, (150+j)+dist*i, (650-j)+dist*i, (700-j)+dist*i};
-                        walls.add(new Wall(x, y, 50, new Color(r, g, b)));
-                    }
-                    if (dir == 3 && maze[y+1][x-i].equals("#")){
-                        int[] x = {(100+j)+dist*i, (150+j)+dist*i, (150+j)+dist*i, (100+j)+dist*i};
-                        int[] y = {(100+j)+dist*i, (150+j)+dist*i, (650-j)+dist*i, (700-j)+dist*i};
-                        walls.add(new Wall(x, y, 50, new Color(r, g, b)));
-                    }
-                }catch(ArrayIndexOutOfBoundsException e){}
-                r--;
-                g--;
-                b--;
-            }
-        }
-    }*/
-
-    public void addLeftWalls(){  // WORKING METHOD
-    int r = 255;
-    int g = 255;
-    int b = 255;
+    public void addLeftWalls(){
         for (int i = 0; i < 5; i++){
             try{
                 if (dir == 0 && maze[y-i][x-1].equals("#")){
                     int[] x = {100+dist*i, 150+dist*i, 150+dist*i, 100+dist*i};
                     int[] y = {100+dist*i, 150+dist*i, 650-dist*i, 700-dist*i};
-                    walls.add(new Wall(x, y, 50, new Color(r, g, b)));
+                    walls.add(new Wall(x, y, 50, new GradientPaint(100, 400, Color.WHITE, 350, 400, Color.BLACK)));
                 }
                 if (dir == 1 && maze[y-1][x+i].equals("#")){
                     int[] x = {100+dist*i, 150+dist*i, 150+dist*i, 100+dist*i};
                     int[] y = {100+dist*i, 150+dist*i, 650-dist*i, 700-dist*i};
-                    walls.add(new Wall(x, y, 50, new Color(r, g, b)));
+                    walls.add(new Wall(x, y, 50, new GradientPaint(100, 400, Color.WHITE, 350, 400, Color.BLACK)));
                 }
                 if (dir == 2 && maze[y+i][x+1].equals("#")){
                     int[] x = {100+dist*i, 150+dist*i, 150+dist*i, 100+dist*i};
                     int[] y = {100+dist*i, 150+dist*i, 650-dist*i, 700-dist*i};
-                    walls.add(new Wall(x, y, 50, new Color(r, g, b)));
+                    walls.add(new Wall(x, y, 50, new GradientPaint(100, 400, Color.WHITE, 350, 400, Color.BLACK)));
                 }
                 if (dir == 3 && maze[y+1][x-i].equals("#")){
                     int[] x = {100+dist*i, 150+dist*i, 150+dist*i, 100+dist*i};
                     int[] y = {100+dist*i, 150+dist*i, 650-dist*i, 700-dist*i};
-                    walls.add(new Wall(x, y, 50, new Color(r, g, b)));
+                    walls.add(new Wall(x, y, 50, new GradientPaint(100, 400, Color.WHITE, 350, 400, Color.BLACK)));
                 }
             }catch(ArrayIndexOutOfBoundsException e){}
         }
     }
 
     public void addRightWalls(){
-    int r = 255;
-    int g = 255;
-    int b = 255;
         for (int i = 0; i < 5; i++){
             try{
                 if (dir == 0 && maze[y-i][x+1].equals("#")){
                     int[] x = {700-dist*i, 650-dist*i, 650-dist*i, 700-dist*i};
                     int[] y = {100+dist*i, 150+dist*i, 650-dist*i, 700-dist*i};
-                    walls.add(new Wall(x, y, 50, new Color(r, g, b)));
+                    walls.add(new Wall(x, y, 50, new GradientPaint(700, 400, Color.WHITE, 450, 400, Color.BLACK)));
                 }
                 if (dir == 1 && maze[y+1][x+i].equals("#")){
                     int[] x = {700-dist*i, 650-dist*i, 650-dist*i, 700-dist*i};
                     int[] y = {100+dist*i, 150+dist*i, 650-dist*i, 700-dist*i};
-                    walls.add(new Wall(x, y, 50, new Color(r, g, b)));
+                    walls.add(new Wall(x, y, 50, new GradientPaint(700, 400, Color.WHITE, 450, 400, Color.BLACK)));
                 }
                 if (dir == 2 && maze[y+i][x-1].equals("#")){
                     int[] x = {700-dist*i, 650-dist*i, 650-dist*i, 700-dist*i};
                     int[] y = {100+dist*i, 150+dist*i, 650-dist*i, 700-dist*i};
-                    walls.add(new Wall(x, y, 50, new Color(r, g, b)));
+                    walls.add(new Wall(x, y, 50, new GradientPaint(700, 400, Color.WHITE, 450, 400, Color.BLACK)));
                 }
                 if (dir == 3 && maze[y-1][x-i].equals("#")){
                     int[] x = {700-dist*i, 650-dist*i, 650-dist*i, 700-dist*i};
                     int[] y = {100+dist*i, 150+dist*i, 650-dist*i, 700-dist*i};
-                    walls.add(new Wall(x, y, 50, new Color(r, g, b)));
+                    walls.add(new Wall(x, y, 50, new GradientPaint(700, 400, Color.WHITE, 450, 400, Color.BLACK)));
                 }
             }catch(ArrayIndexOutOfBoundsException e){}
         }
     }
 
     public void addFloors(){
-    int r = 255;
-    int g = 255;
-    int b = 255;
         for (int i = 0; i < 5; i++){
             try{
                 int[] x = {100+dist*i, 700-dist*i, 650-dist*i, 150+dist*i};
                 int[] y = {700-dist*i, 700-dist*i, 650-dist*i, 650-dist*i};
-                walls.add(new Wall(x, y, 50, new Color(r, g, b)));
+                walls.add(new Wall(x, y, 50, new GradientPaint(400, 700, Color.WHITE, 400, 450, Color.BLACK)));
             }catch(ArrayIndexOutOfBoundsException e){}
         }
     }
 
     public void addCeilings(){
-    int r = 255;
-    int g = 255;
-    int b = 255;
         for (int i = 0; i < 5; i++){
             try{
                 int[] x = {100+dist*i, 700-dist*i, 650-dist*i, 150+dist*i};
                 int[] y = {100+dist*i, 100+dist*i, 150+dist*i, 150+dist*i};
-                walls.add(new Wall(x, y, 50, new Color(r, g, b)));
+                walls.add(new Wall(x, y, 50, new GradientPaint(400, 100, Color.WHITE, 400, 350, Color.BLACK)));
             }catch(ArrayIndexOutOfBoundsException e){}
         }
     }
 
-    public void addFrontWalls(){
+    /*public void addFrontWalls(){
     int r = 255;
     int g = 255;
     int b = 255;
@@ -396,7 +312,7 @@ public class MazeProgram extends JPanel implements KeyListener {
                 }
             }catch(ArrayIndexOutOfBoundsException e){}
         }
-    }
+    }*/
 
     public void keyTyped(KeyEvent e){
     }
@@ -405,35 +321,26 @@ public class MazeProgram extends JPanel implements KeyListener {
         private int[] y;
         private int[] x;
         private int dist;
+        private GradientPaint gradientPaint;
         private Color color;
         
-        public Wall(int[] x, int[] y, int dist, Color color){
+        public Wall(int[] x, int[] y, int dist, GradientPaint gradientPaint){
             this.x = x;
             this.y = y;
             this.dist = dist;
-            this.color = color;
+            this.gradientPaint = gradientPaint;
         }
 
         public Color getColor(){
             return color;
         }
 
+        public GradientPaint getGradientPaint(){
+            return gradientPaint;
+        }
+
         public Polygon getWall(){
             return new Polygon(x,y,x.length);
-        }
-    }
-
-    public class WallBorder{
-        private int[] x;
-        private int[] y;
-
-        public WallBorder(int[] x, int[] y){
-            this.x = x;
-            this.y = y;
-        }
-
-        public Polygon getWallBorder(){
-            return new Polygon(x, y, x.length);
         }
     }
 
