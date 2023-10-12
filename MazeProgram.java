@@ -180,7 +180,26 @@ public class MazeProgram extends JPanel implements KeyListener {
             dir++;
             dir%=4;
         }
-
+        if (e.getKeyCode() == 40){ // walking backwards
+            switch(dir){
+                case 0:
+                    if (maze[y+1][x].equals(" "))
+                        y++;
+                    break;
+                case 1:
+                    if (maze[y][x-1].equals(" "))
+                        x--;
+                    break;
+                case 2:
+                    if (maze[y-1][x].equals(" "))
+                        y--;
+                    break;
+                case 3:
+                    if (maze[y][x+1].equals(" "))
+                        x++;
+                    break;
+            }
+        }
         if(e.getKeyCode() == 32){
             in3D =! in3D;
         }
