@@ -1,5 +1,7 @@
 // CHANGE UR PATH NAME
 // u can ignore boolean[][] passedOver I'm just trying shit out
+// change the startR/G/B and startHR/G/B to ur own values
+// the startHR/G/B shld be a darker tone of the color u choose with startR/G/B
 
 import java.io.*;
 import java.awt.*;
