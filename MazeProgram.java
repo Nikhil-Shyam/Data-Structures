@@ -1,5 +1,4 @@
-// CHANGE UR PATH NAME
-// u can ignore boolean[][] passedOver I'm just trying shit out
+// CHANGE UR PATH NAMES
 // change the startR/G/B and startHR/G/B to ur own values
 // the startHR/G/B shld be a darker tone of the color u choose with startR/G/B
 
@@ -8,6 +7,9 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import java.util.ArrayList;
+import java.awt.image.*;
+import javax.imageio.ImageIO;
+import java.awt.GradientPaint;
 
 public class MazeProgram extends JPanel implements KeyListener {
     JFrame frame;
@@ -16,7 +18,6 @@ public class MazeProgram extends JPanel implements KeyListener {
     int dir;
     int dim = 20;
     String[][] maze;
-    boolean[][] passedOver;
     int dist = 50;
 
     int startR = 75;
@@ -25,6 +26,9 @@ public class MazeProgram extends JPanel implements KeyListener {
     int startHR = 60;
     int startHG = 12;
     int startHB = 104;
+
+    BufferedImage northWalk, northStand, eastWalk, eastStand, southWalk, southStand, westWalk, westStand;
+    int count;
 
     ArrayList<Wall> walls;
     ArrayList<FrontWall> frontWalls;
@@ -36,16 +40,34 @@ public class MazeProgram extends JPanel implements KeyListener {
         frame.setSize(2560, 1600);
         frame.addKeyListener(this);
 
+        try{
+            northStand = ImageIO.read(new File("/Users/nikhilshyam/Desktop/Data Structures/Template/northStand.png"));
+            northWalk = ImageIO.read(new File("/Users/nikhilshyam/Desktop/Data Structures/Template/northWalk.png"));
+            eastWalk = ImageIO.read(new File("/Users/nikhilshyam/Desktop/Data Structures/Template/eastWalk.png"));
+            eastStand = ImageIO.read(new File("/Users/nikhilshyam/Desktop/Data Structures/Template/eastStand.png"));
+            southWalk = ImageIO.read(new File("/Users/nikhilshyam/Desktop/Data Structures/Template/southWalk.png"));
+            southStand = ImageIO.read(new File("/Users/nikhilshyam/Desktop/Data Structures/Template/southStand.png"));
+            westWalk = ImageIO.read(new File("/Users/nikhilshyam/Desktop/Data Structures/Template/westWalk.png"));
+            westStand = ImageIO.read(new File("/Users/nikhilshyam/Desktop/Data Structures/Template/westStand.png"));
+        }catch(IOException e){}
+
         x = 1;
         y = 1;
         dir = 0;
 
         setMaze();
 
-        passedOver = new boolean[maze.length][maze[0].length];
-
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
+    }
+
+    public BufferedImage resize(BufferedImage image, int width, int height){
+        Image temp = image.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+        BufferedImage scaledVersion = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2 = scaledVersion.createGraphics();
+        g2.drawImage(temp, 0, 0, null);
+        g2.dispose();
+        return scaledVersion;
     }
 
     public void setMaze(){
@@ -99,6 +121,15 @@ public class MazeProgram extends JPanel implements KeyListener {
 
         g2.setStroke(new BasicStroke(2));
         if (!in3D){
+            northWalk = resize(northWalk, dim, dim);
+            northStand = resize(northStand, dim, dim);
+            eastWalk = resize(eastWalk, dim, dim);
+            eastStand = resize(eastStand, dim, dim);
+            southWalk = resize(southWalk, dim, dim);
+            southStand = resize(southStand, dim, dim);
+            westWalk = resize(westWalk, dim, dim);
+            westStand = resize(westStand, dim, dim);
+
             for(int i = 0; i < maze.length; i++){
                 for (int j = 0; j < maze[i].length; j++){
                     if (maze[i][j].equals("#")){
@@ -110,11 +141,40 @@ public class MazeProgram extends JPanel implements KeyListener {
                 }
             }
 
-            g.setColor(new Color(150, 150, 250));
-            g.fillOval(x*dim+40, y*dim+40, dim, dim);
-            g.setColor(Color.CYAN);
-            g.drawOval(x*dim+40, y*dim+40, dim, dim);
+            if (dir == 0){
+                if (count%2==0)
+                    g.drawImage(northWalk, x*dim+40, y*dim+40, this);
+                else
+                    g.drawImage(northStand, x*dim+40, y*dim+40, this);
+            }
+            if (dir == 1){
+                if (count%2==0)
+                    g.drawImage(eastWalk, x*dim+40, y*dim+40, this);
+                else
+                    g.drawImage(eastStand, x*dim+40, y*dim+40, this);
+            }
+            if (dir == 2){
+                if (count%2==0)
+                    g.drawImage(southWalk, x*dim+40, y*dim+40, this);
+                else
+                    g.drawImage(southStand, x*dim+40, y*dim+40, this);
+            }
+            if (dir == 3){
+                if (count%2==0)
+                    g.drawImage(westWalk, x*dim+40, y*dim+40, this);
+                else
+                    g.drawImage(westStand, x*dim+40, y*dim+40, this);
+            }
         }else{
+            northWalk = resize(northWalk, 10, 10);
+            northStand = resize(northStand, 10, 10);
+            eastWalk = resize(eastWalk, 10, 10);
+            eastStand = resize(eastStand, 10, 10);
+            southWalk = resize(southWalk, 10, 10);
+            southStand = resize(southStand, 10, 10);
+            westWalk = resize(westWalk, 10, 10);
+            westStand = resize(westStand, 10, 10);
+
             for(int i = 0; i < maze.length; i++){
                 for (int j = 0; j < maze[i].length; j++){
                     if (maze[i][j].equals("#")){
@@ -125,10 +185,35 @@ public class MazeProgram extends JPanel implements KeyListener {
                     }
                 }
             }
-            g.setColor(new Color(150, 150, 250));
-            g.fillOval(x*10+800, y*10+200, 10, 10);
-            g.setColor(Color.CYAN);
-            g.drawOval(x*10+800, y*10+200, 10, 10);
+
+            if (count%2 == 0)
+                g.drawImage(eastWalk, x*10+800, y*10+200, this);
+            else
+                g.drawImage(eastWalk, x*10+800, y*10+200, this);
+            if (dir == 0){
+                if (count%2==0)
+                    g.drawImage(northWalk, x*10+800, y*10+200, this);
+                else
+                    g.drawImage(northStand, x*10+800, y*10+200, this);
+            }
+            if (dir == 1){
+                if (count%2==0)
+                    g.drawImage(eastWalk, x*10+800, y*10+200, this);
+                else
+                    g.drawImage(eastStand, x*10+800, y*10+200, this);
+            }
+            if (dir == 2){
+                if (count%2==0)
+                    g.drawImage(southWalk, x*10+800, y*10+200, this);
+                else
+                    g.drawImage(southStand, x*10+800, y*10+200, this);
+            }
+            if (dir == 3){
+                if (count%2==0)
+                    g.drawImage(westWalk, x*10+800, y*10+200, this);
+                else
+                    g.drawImage(westStand, x*10+800, y*10+200, this);
+            }
 
             for (Wall wall: walls){
                 g2.setPaint(wall.getGradientPaint());
@@ -149,16 +234,14 @@ public class MazeProgram extends JPanel implements KeyListener {
     public void keyReleased(KeyEvent e){
     }
     public void keyPressed(KeyEvent e){
+        count++;
         // 0 - N | 1 - E | 2 - S | 3 - W
-        System.out.println(e.getKeyCode());
         if (e.getKeyCode() == 37){ // turning left
             dir--;
             if (dir < 0)
                 dir = 3;
         }
         if (e.getKeyCode() == 38){ // walking forwards
-            passedOver[y][x] = true;
-
             switch(dir){
                 case 0:
                     if (maze[y-1][x].equals(" "))
@@ -216,7 +299,6 @@ public class MazeProgram extends JPanel implements KeyListener {
             addCeilings();
             addFrontWalls();
         }
-
         repaint();
     }
 
