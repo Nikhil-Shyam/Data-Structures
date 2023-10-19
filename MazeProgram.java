@@ -9,7 +9,6 @@ import javax.swing.*;
 import java.util.ArrayList;
 import java.awt.image.*;
 import javax.imageio.ImageIO;
-import java.awt.GradientPaint;
 
 public class MazeProgram extends JPanel implements KeyListener {
     JFrame frame;
@@ -20,12 +19,12 @@ public class MazeProgram extends JPanel implements KeyListener {
     String[][] maze;
     int dist = 50;
 
-    int startR = 75;
-    int startG = 15;
-    int startB = 130;
-    int startHR = 60;
-    int startHG = 12;
-    int startHB = 104;
+    int startR = 75; //75
+    int startG = 15; //15
+    int startB = 130; //130
+    int startHR = 60; //60
+    int startHG = 12; //12
+    int startHB = 104; //104
 
     BufferedImage northWalk, northStand, eastWalk, eastStand, southWalk, southStand, westWalk, westStand;
     int count;
@@ -33,6 +32,11 @@ public class MazeProgram extends JPanel implements KeyListener {
     ArrayList<Wall> walls;
     ArrayList<FrontWall> frontWalls;
     boolean in3D = false;
+
+    private Monster monster;
+
+    Font font = new Font("Comic Sans", Font.BOLD, 40);
+    boolean gameOver = false;
 
     public MazeProgram(){
         frame = new JFrame();
@@ -104,8 +108,13 @@ public class MazeProgram extends JPanel implements KeyListener {
                     y = row;
                     maze[y][x] = " ";
                 }
+                if(st.indexOf("M") >= 0){
+                    monster = new Monster(st.indexOf("M"), row);
+                    maze[y][x] = " ";
+                }
                 row++;
             }
+
         }
         catch(IOException e){
         }
@@ -141,6 +150,11 @@ public class MazeProgram extends JPanel implements KeyListener {
                 }
             }
 
+            g.setColor(Color.RED);
+            g.fillOval(monster.getX()*dim+40, monster.getY()*dim+40, dim, dim);
+            g.setColor(Color.WHITE);
+            g.drawOval(monster.getX()*dim+40, monster.getY()*dim+40, dim, dim);
+
             if (dir == 0){
                 if (count%2==0)
                     g.drawImage(northWalk, x*dim+40, y*dim+40, this);
@@ -165,6 +179,11 @@ public class MazeProgram extends JPanel implements KeyListener {
                 else
                     g.drawImage(westStand, x*dim+40, y*dim+40, this);
             }
+            if (gameOver){
+                g2.setColor(Color.WHITE);
+                g2.setFont(font);
+                g2.drawString("CAPTURED, YOU LOSE!", 300, 200);
+            }
         }else{
             northWalk = resize(northWalk, 10, 10);
             northStand = resize(northStand, 10, 10);
@@ -185,6 +204,11 @@ public class MazeProgram extends JPanel implements KeyListener {
                     }
                 }
             }
+
+            g.setColor(Color.RED);
+            g.fillOval(monster.getX()*10+800, monster.getY()*10+200, 10, 10);
+            g.setColor(Color.WHITE);
+            g.drawOval(monster.getX()*10+800, monster.getY()*10+200, 10, 10);
 
             if (count%2 == 0)
                 g.drawImage(eastWalk, x*10+800, y*10+200, this);
@@ -228,6 +252,11 @@ public class MazeProgram extends JPanel implements KeyListener {
                 g.setColor(Color.BLACK);
                 g2.draw(frontWall.getFrontWall());
             }
+            if (gameOver){
+                g2.setColor(Color.WHITE);
+                g2.setFont(font);
+                g2.drawString("CAPTURED, YOU LOSE!", 500, 100);
+            }
         }
     }
     
@@ -235,6 +264,8 @@ public class MazeProgram extends JPanel implements KeyListener {
     }
     public void keyPressed(KeyEvent e){
         count++;
+        monster.updatePosition(x, y);
+
         // 0 - N | 1 - E | 2 - S | 3 - W
         if (e.getKeyCode() == 37){ // turning left
             dir--;
@@ -285,6 +316,12 @@ public class MazeProgram extends JPanel implements KeyListener {
                     break;
             }
         }
+
+        if (x == monster.getX() && y == monster.getY()){
+            gameOver = true;
+            repaint();
+        }
+
         if(e.getKeyCode() == 32){
             in3D =! in3D;
         }
@@ -475,6 +512,51 @@ public class MazeProgram extends JPanel implements KeyListener {
 
         public Polygon getFrontWall(){
             return new Polygon(x,y,x.length);
+        }
+    }
+
+    public class Monster{
+        private int monsterX;
+        private int monsterY;
+
+        public Monster(int monsterX, int monsterY){
+            this.monsterX = monsterX;
+            this.monsterY = monsterY;
+        }
+
+        public void updatePosition(int playerX, int playerY){
+            if (monsterX < playerX){
+                if (isValidMove(monsterX + 1, monsterY)){
+                    monsterX++;
+                }
+            }else if (monsterX > playerX){
+                if (isValidMove(monsterX - 1, monsterY)){
+                    monsterX--;
+                }
+            }
+            if (monsterY < playerY){
+                if (isValidMove(monsterX, monsterY + 1)){
+                    monsterY++;
+                }
+            }else if (monsterY > playerY) {
+                if (isValidMove(monsterX, monsterY - 1)){
+                    monsterY--;
+                }
+            }   
+        }
+
+        public boolean isValidMove(int x, int y){
+            if (maze[y][x].equals(" "))
+                return true;
+            return false;
+        }
+
+        public int getX(){
+            return monsterX;
+        }
+
+        public int getY(){
+            return monsterY;
         }
     }
 
