@@ -26,7 +26,7 @@ public class MazeProgram extends JPanel implements KeyListener {
     int startHG = 12; //12
     int startHB = 104; //104
 
-    BufferedImage northWalk, northStand, eastWalk, eastStand, southWalk, southStand, westWalk, westStand;
+    BufferedImage northWalk, northStand, eastWalk, eastStand, southWalk, southStand, westWalk, westStand, monster3D, monster2D;
     int count;
 
     ArrayList<Wall> walls;
@@ -53,6 +53,8 @@ public class MazeProgram extends JPanel implements KeyListener {
             southStand = ImageIO.read(new File("/Users/nikhilshyam/Desktop/Data Structures/Template/southStand.png"));
             westWalk = ImageIO.read(new File("/Users/nikhilshyam/Desktop/Data Structures/Template/westWalk.png"));
             westStand = ImageIO.read(new File("/Users/nikhilshyam/Desktop/Data Structures/Template/westStand.png"));
+            monster3D = ImageIO.read(new File("/Users/nikhilshyam/Desktop/Data Structures/Template/monster3D.png"));
+            monster2D = ImageIO.read(new File("/Users/nikhilshyam/Desktop/Data Structures/Template/monster2D.png"));
         }catch(IOException e){}
 
         x = 1;
@@ -138,6 +140,7 @@ public class MazeProgram extends JPanel implements KeyListener {
             southStand = resize(southStand, dim, dim);
             westWalk = resize(westWalk, dim, dim);
             westStand = resize(westStand, dim, dim);
+            monster2D = resize(monster2D, dim, dim);
 
             for(int i = 0; i < maze.length; i++){
                 for (int j = 0; j < maze[i].length; j++){
@@ -150,10 +153,7 @@ public class MazeProgram extends JPanel implements KeyListener {
                 }
             }
 
-            g.setColor(Color.RED);
-            g.fillOval(monster.getX()*dim+40, monster.getY()*dim+40, dim, dim);
-            g.setColor(Color.WHITE);
-            g.drawOval(monster.getX()*dim+40, monster.getY()*dim+40, dim, dim);
+            g.drawImage(monster2D, monster.getX()*dim+40, monster.getY()*dim+40, this);
 
             if (dir == 0){
                 if (count%2==0)
@@ -205,10 +205,8 @@ public class MazeProgram extends JPanel implements KeyListener {
                 }
             }
 
-            g.setColor(Color.RED);
-            g.fillOval(monster.getX()*10+800, monster.getY()*10+200, 10, 10);
-            g.setColor(Color.WHITE);
-            g.drawOval(monster.getX()*10+800, monster.getY()*10+200, 10, 10);
+            monster2D = resize(monster2D, 10, 10);
+            g.drawImage(monster2D, monster.getX()*10+800, monster.getY()*10+200, this);
 
             if (count%2 == 0)
                 g.drawImage(eastWalk, x*10+800, y*10+200, this);
@@ -252,6 +250,8 @@ public class MazeProgram extends JPanel implements KeyListener {
                 g.setColor(Color.BLACK);
                 g2.draw(frontWall.getFrontWall());
             }
+            addMonster(g, g2);
+
             if (gameOver){
                 g2.setColor(Color.WHITE);
                 g2.setFont(font);
@@ -469,6 +469,57 @@ public class MazeProgram extends JPanel implements KeyListener {
             r += 15;
             g += 3;
             b += 26;
+        }
+    }
+
+    public void addMonster(Graphics g, Graphics2D g2){
+        for (int i = 5; i >= 0; i--){
+            try{
+                if (dir == 0 && x == monster.getX() && y-i == monster.getY()){
+                    boolean temp = false;
+                    for (int j = i; j >= 1; j--){
+                        if(maze[y-i+j][x].equals("#"))
+                            temp = true;
+                    }
+                    if (!temp){
+                        monster3D = resize(monster3D, 600-100*i, 600-100*i);
+                        g.drawImage(monster3D, 100+dist*i, 100+dist*i, this);
+                    }
+                }
+                if (dir == 1 && x+i == monster.getX() && y == monster.getY()){
+                    boolean temp = false;
+                    for (int j = i; j >= 1; j--){
+                        if(maze[y][x+i-j].equals("#"))
+                            temp = true;
+                    }
+                    if (!temp){
+                        monster3D = resize(monster3D, 600-100*i, 600-100*i);
+                        g.drawImage(monster3D, 100+dist*i, 100+dist*i, this);
+                    }
+                }
+                if (dir == 2 && x == monster.getX() && y+i == monster.getY()){
+                    boolean temp = false;
+                    for (int j = i; j >= 1; j--){
+                        if(maze[y+i-j][x].equals("#"))
+                            temp = true;
+                    }
+                    if (!temp){
+                        monster3D = resize(monster3D, 600-100*i, 600-100*i);
+                        g.drawImage(monster3D, 100+dist*i, 100+dist*i, this);
+                    }
+                }
+                if (dir == 3 && x-i == monster.getX() && y == monster.getY()){
+                    boolean temp = false;
+                    for (int j = i; j >= 1; j--){
+                        if(maze[y][x-i+j].equals("#"))
+                            temp = true;
+                    }
+                    if (!temp){
+                        monster3D = resize(monster3D, 600-100*i, 600-100*i);
+                        g.drawImage(monster3D, 100+dist*i, 100+dist*i, this);
+                    }
+                }
+            }catch(ArrayIndexOutOfBoundsException ex){}
         }
     }
 
