@@ -1,5 +1,4 @@
 // change path name
-// works but slight problem w/ split method, gonna ask him tmrw (11/13)
 
 import java.util.Stack;
 import java.io.*;
@@ -13,12 +12,21 @@ public class StackAssignmentPart3{
 
 	public StackAssignmentPart3(){
 		try{
-			File file = new File("C:\\Users\\nikhi\\OneDrive\\Desktop\\TextPad\\StarWarsCharacters.csv");
+			File file = new File("/Users/nikhilshyam/Desktop/Data Structures/Template/StarWarsCharacters.csv");
 			BufferedReader input = new BufferedReader(new FileReader(file));
 
 			String st;
 			int next = 0;
 			while ((st = input.readLine()) != null){
+                System.out.println(st);
+                if(st.contains("\"")){
+                    int i1 = st.indexOf("\"");
+                    String t1 = st.substring(0,i1) + st.substring(i1+1);
+                    int i2 = t1.indexOf("\"") + 1;
+                    String t2 = st.substring(i1 + 1, i2);
+                    String t3 = t2.substring(0, t2.indexOf(",")) + t2.substring(t2.indexOf(",") + 1);
+                    st = st.substring(0, i1) + t3 + st.substring(i2+1);
+                }
 				person[next] = st.split(",");
 				next++;
 			}
@@ -124,9 +132,7 @@ public class StackAssignmentPart3{
 				homeWorld = "Unknown";
 			else
 				homeWorld = temp.getHomeWorld();
-			if (temp.getBirthYear().equals("NA"))
-				birthYear = "Unknown";
-			else if (!temp.getBirthYear().contains("."))
+            if (!temp.getBirthYear().contains("."))
 				birthYear = temp.getBirthYear() + ".0";
 			else
 				birthYear = temp.getBirthYear();
