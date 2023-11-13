@@ -1,4 +1,5 @@
 // change path name
+// works but slight problem w/ split method, gonna ask him tmrw (11/13)
 
 import java.util.Stack;
 import java.io.*;
