@@ -147,37 +147,5 @@ public class QueuesAndPriorityQueuesPart2 {
         public String toString(){
             return carID + "\t" + MPG + "\t" + engineSize + "\t" + HP + "\t" + weight + "\t" + acceleration + "\t" + countryOfOrigin + "\t" + numberOfCylinders;
         }
-
-        public int getCarID(){
-            return carID;
-        }
-
-        public int getMPG(){
-            return MPG;
-        }
-
-        public int getEngineSize(){
-            return engineSize;
-        }
-
-        public int getHP(){
-            return HP;
-        }
-
-        public int getWeight(){
-            return weight;
-        }
-
-        public int getAcceleration(){
-            return acceleration;
-        }
-
-        public int getCountryOfOrigin(){
-            return countryOfOrigin;
-        }
-
-        public int getNumberOfCylinders(){
-            return numberOfCylinders;
-        }
     }
 }
