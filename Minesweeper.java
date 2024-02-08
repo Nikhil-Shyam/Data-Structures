@@ -16,15 +16,15 @@ public class Minesweeper extends JFrame implements ActionListener, MouseListener
 	boolean gameOver = false;
 
 	public Minesweeper(){
-		mineIcon = new ImageIcon("C:\\Users\\10018099\\Desktop\\Data Structures\\Minesweeper Images\\mine0.png");
+		mineIcon = new ImageIcon("/Users/nikhilshyam/Desktop/Data Structures/Minesweeper Images/mine0.png");
 		mineIcon = new ImageIcon(mineIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
 
-		flag = new ImageIcon("C:\\Users\\10018099\\Desktop\\Data Structures\\Minesweeper Images\\flag.png");
+		flag = new ImageIcon("/Users/nikhilshyam/Desktop/Data Structures/Minesweeper Images/flag.png");
 		flag = new ImageIcon(flag.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
 
 		numbers = new ImageIcon[8];
 		for (int i = 0; i < 8; i++){
-			numbers[i] = new ImageIcon("C:\\Users\\10018099\\Desktop\\Data Structures\\Minesweeper Images\\" + (i+1) + ".png");
+			numbers[i] = new ImageIcon("/Users/nikhilshyam/Desktop/Data Structures/Minesweeper Images/" + (i+1) + ".png");
 			numbers[i] = new ImageIcon(numbers[i].getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
 		}
 
@@ -98,16 +98,6 @@ public class Minesweeper extends JFrame implements ActionListener, MouseListener
 				count++;
 			}
 		}
-		/*for(int r=0;r<board.length;r++)
-		{
-			for(int c=0;c<board[0].length;c++)
-			{
-				String st=""+board[r][c].getClientProperty("state");
-				board[r][c].setText(st);
-			}
-		}
-*/
-
 	}
 
 	public void mouseReleased(MouseEvent e){
@@ -135,14 +125,14 @@ public class Minesweeper extends JFrame implements ActionListener, MouseListener
 					checkWin();
 				}
 			}
-			if (e.getButton() == MouseEvent.BUTTON3){ // flag stuff
+			if (e.getButton() == MouseEvent.BUTTON3 && board[row][col].isEnabled()){ // flag stuff
 				if (!board[row][col].isSelected()){
 					if (board[row][col].getIcon() == null){
 						board[row][col].setIcon(flag);
 						board[row][col].setDisabledIcon(flag);
 					}else if (board[row][col].getIcon() == flag){
 						board[row][col].setIcon(null);
-						board[row][col].setDisabledIcon(null);
+						// board[row][col].setDisabledIcon(null);
 					}
 				}
 			}
@@ -166,6 +156,15 @@ public class Minesweeper extends JFrame implements ActionListener, MouseListener
 	public void checkWin(){
 		if (emptyBoxCount == 0){
 			JOptionPane.showMessageDialog(null, "You are a winner!");
+            for (int i = 0; i < board.length; i++){ // removing all flags
+                for (int j = 0; j < board[0].length; j++){
+                    if (board[i][j].getIcon() == flag){
+                        board[i][j].setIcon(null);
+                        board[i][j].setDisabledIcon(null);
+                    }
+                    board[i][j].setEnabled(false);
+                }
+            }
 		}
 	}
 
