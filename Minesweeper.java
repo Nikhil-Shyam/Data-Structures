@@ -2,26 +2,32 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import java.io.*;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Minesweeper extends JFrame implements ActionListener, MouseListener{
 	JToggleButton[][] board;
 	JPanel boardPanel;
 
-	ImageIcon mineIcon, flag;
+	ImageIcon mineIcon, flag, smile, loseSmile, winSmile, incorrectMine;
 	ImageIcon[] numbers;
 
+	JButton reset;
+	JTextField timeField;
+	// JLabel numFlags;
 	JMenuBar menuBar;
 	JMenu difficulty;
 	JMenuItem beginner, intermediate, expert, random;
 
-	int numMines;
-	int emptyBoxCount;
+	Timer timer;
+	int timePassed = 0;
+
+	int numMines, emptyBoxCount, numFlags;
 
 	Font font;
 	GraphicsEnvironment ge;
 
-	boolean firstClick;
-	boolean gameOver;
+	boolean firstClick, gameOver;
 
 	public Minesweeper(){
 		try{
@@ -29,6 +35,27 @@ public class Minesweeper extends JFrame implements ActionListener, MouseListener
 			font = Font.createFont(Font.TRUETYPE_FONT, new File("C:\\Users\\10018099\\Desktop\\Data Structures\\Minesweeper Images\\digital-7.ttf"));
 			ge.registerFont(font);
 		}catch(IOException|FontFormatException e){}
+
+		smile = new ImageIcon("C:\\Users\\10018099\\Desktop\\Data Structures\\Minesweeper Images\\smile0.png");
+		smile = new ImageIcon(smile.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
+		loseSmile = new ImageIcon("C:\\Users\\10018099\\Desktop\\Data Structures\\Minesweeper Images\\dead0.png");
+		loseSmile = new ImageIcon(loseSmile.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
+		winSmile = new ImageIcon("C:\\Users\\10018099\\Desktop\\Data Structures\\Minesweeper Images\\win0.png");
+		winSmile = new ImageIcon(winSmile.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
+		// incorrectMine = new ImageIcon("C:\\Users\\10018099\\Desktop\\Data Structures\\Minesweeper Images\\wait0.png");
+		// incorrectMine = new ImageIcon(incorrectMine.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
+
+		reset = new JButton();
+		reset.setFocusable(false);
+		reset.addActionListener(this);
+		reset.setIcon(smile);
+
+		timeField = new JTextField();
+		timeField.setFont(font.deriveFont(20f));
+		timeField.setBackground(Color.BLACK);
+		timeField.setForeground(Color.GREEN);
+		timeField.setEditable(false);
+		timeField.setText("  " + 0);
 
 
 		menuBar = new JMenuBar();
@@ -56,6 +83,10 @@ public class Minesweeper extends JFrame implements ActionListener, MouseListener
 		random.addActionListener(this);
 
 		menuBar.add(difficulty);
+		menuBar.add(reset);
+		menuBar.add(timeField);
+
+		menuBar.setLayout(new GridLayout(1, 3));
 		this.add(menuBar, BorderLayout.NORTH);
 
 
@@ -91,6 +122,7 @@ public class Minesweeper extends JFrame implements ActionListener, MouseListener
 		firstClick = true;
 		gameOver = false;
 		this.numMines = numMines;
+		numFlags = numMines;
 		emptyBoxCount = row * col - numMines;
 		boardPanel = new JPanel();
 		boardPanel.setLayout(new GridLayout(row, col));
@@ -142,6 +174,9 @@ public class Minesweeper extends JFrame implements ActionListener, MouseListener
 		if (!gameOver){
 			if (e.getButton() == MouseEvent.BUTTON1 && board[row][col].isEnabled()){
 				if (firstClick){
+					timer = new Timer();
+					timer.schedule(new UpdateTimer(), 0, 1000);
+
 					setMinesAndCounts(row, col);
 					firstClick=false;
 				}
@@ -150,7 +185,9 @@ public class Minesweeper extends JFrame implements ActionListener, MouseListener
 					board[row][col].setSelected(false);
 					showMines();
 					gameOver = true;
-					JOptionPane.showMessageDialog(null, "You are a loser!");
+					timer.cancel();
+					reset.setIcon(loseSmile);
+					// JOptionPane.showMessageDialog(null, "You are a loser!");
 				}else{
 					board[row][col].setSelected(true);
 					emptyBoxCount--;
@@ -158,15 +195,17 @@ public class Minesweeper extends JFrame implements ActionListener, MouseListener
 					checkWin();
 				}
 			}
-			if (!firstClick && e.getButton() == MouseEvent.BUTTON3 && !board[row][col].isSelected()){ // flag stuff
-				if (board[row][col].isEnabled()){
+			if (!firstClick && e.getButton() == MouseEvent.BUTTON3 && !board[row][col].isSelected()){
+				if (board[row][col].isEnabled() && numFlags > 0){
 					board[row][col].setIcon(flag);
 					board[row][col].setDisabledIcon(flag);
 					board[row][col].setEnabled(false);
-				}else{
+					numFlags--;
+				}else if (board[row][col].getIcon() == flag){
 					board[row][col].setIcon(null);
 					board[row][col].setDisabledIcon(null);
 					board[row][col].setEnabled(true);
+					numFlags++;
 				}
 			}
 		}
@@ -190,7 +229,9 @@ public class Minesweeper extends JFrame implements ActionListener, MouseListener
 		if (emptyBoxCount == 0){
 			gameOver = true;
             showMines();
-            JOptionPane.showMessageDialog(null, "You are a winner!");
+            timer.cancel();
+            reset.setIcon(winSmile);
+            // JOptionPane.showMessageDialog(null, "You are a winner!");
 		}
 	}
 
@@ -229,6 +270,13 @@ public class Minesweeper extends JFrame implements ActionListener, MouseListener
 			int div = (int)(Math.random()*5)+6;
 			createBoard(row, row, row*col/div);
 		}
+		if (e.getSource() == reset){
+			timer.cancel();
+			timePassed = 0;
+			timeField.setText("  " + timePassed);
+			reset.setIcon(smile);
+			createBoard(board.length, board[0].length, numMines);
+		}
 	}
 
 	public void mousePressed(MouseEvent e){}
@@ -239,5 +287,14 @@ public class Minesweeper extends JFrame implements ActionListener, MouseListener
 
 	public static void main(String[] args){
 		new Minesweeper();
+	}
+
+	public class UpdateTimer extends TimerTask{
+		public void run(){
+			if (!gameOver){
+				timePassed++;
+				timeField.setText("    " + timePassed);
+			}
+		}
 	}
 }
