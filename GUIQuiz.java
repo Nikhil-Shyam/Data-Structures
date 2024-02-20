@@ -24,6 +24,8 @@ public class GUIQuiz extends JFrame implements ActionListener{
 
 	JTextArea textArea;
 
+	float size;
+
 	Font font;
 	Font[] possibleFonts = new Font[fonts.length];
 
@@ -297,8 +299,8 @@ public class GUIQuiz extends JFrame implements ActionListener{
 		textArea.setForeground(c);
 	}
 
-	public void changeFontSize(int size){
-		float s = (float) size;
+	public void changeFontSize(int s){
+		this.size = (float) s;
 		/*
 		north.setFont(font.deriveFont(s));
 		south.setFont(font.deriveFont(s));
@@ -319,7 +321,7 @@ public class GUIQuiz extends JFrame implements ActionListener{
 		for (int i = 0; i < outlineColorOptions.length; i++)
 			outlineColorOptions[i].setFont(font.deriveFont(s));
 		*/
-		textArea.setFont(font.deriveFont(s));
+		textArea.setFont(font.deriveFont(size));
 	}
 
 	public void setNorth(){
@@ -379,6 +381,7 @@ public class GUIQuiz extends JFrame implements ActionListener{
 		for (int i = 0; i < outlineColorOptions.length; i++)
 			outlineColorOptions[i].setFont(font);
 		textArea.setFont(font);
+		textArea.setFont(font.deriveFont(size));
 	}
 
 	public static void main(String[] args){
