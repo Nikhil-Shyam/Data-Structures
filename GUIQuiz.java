@@ -2,6 +2,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.*;
+import javax.swing.BorderFactory.*;
 
 public class GUIQuiz extends JFrame implements ActionListener{
 	JFrame frame;
@@ -24,7 +25,7 @@ public class GUIQuiz extends JFrame implements ActionListener{
 
 	JTextArea textArea;
 
-	float size;
+	float size = 12;
 
 	Font font;
 	Font[] possibleFonts = new Font[fonts.length];
@@ -37,12 +38,14 @@ public class GUIQuiz extends JFrame implements ActionListener{
 		menuBar = new JMenuBar();
 
 		textArea = new JTextArea();
+		textArea.setLineWrap(true);
+		textArea.setWrapStyleWord(true);
 
 		fontBar = new JMenu("Fonts");
 		fontSizeBar = new JMenu("Font Size");
 		textColorBar = new JMenu("Text Colors");
-		textBackgroundColorBar = new JMenu("Text Background Colors");
-		buttonOutlineColorBar = new JMenu("Button Outline Colors");
+		textBackgroundColorBar = new JMenu("Background Colors");
+		buttonOutlineColorBar = new JMenu("Outline Colors");
 
 		north = new JButton("North");
 		south = new JButton("South");
@@ -58,7 +61,6 @@ public class GUIQuiz extends JFrame implements ActionListener{
 			fontOptions[i] = new JMenuItem(fonts[i]);
 			fontOptions[i].setFont(possibleFonts[i]);
 			fontOptions[i].addActionListener(this);
-			fontOptions[i].setBorder(new LineBorder(null));
 			fontBar.add(fontOptions[i]);
 		}
 
@@ -66,21 +68,18 @@ public class GUIQuiz extends JFrame implements ActionListener{
 			fontSizeOptions[i] = new JMenuItem(fontSizes[i] + "");
 			fontSizeOptions[i].setFont(font);
 			fontSizeOptions[i].addActionListener(this);
-			fontSizeOptions[i].setBorder(new LineBorder(null));
 			fontSizeBar.add(fontSizeOptions[i]);
 		}
 		for (int i = 0; i < textColorOptions.length; i++){
 			textColorOptions[i] = new JMenuItem(textColors[i]);
 			textColorOptions[i].setFont(font);
 			textColorOptions[i].addActionListener(this);
-			textColorOptions[i].setBorder(new LineBorder(null));
 			textColorBar.add(textColorOptions[i]);
 		}
 		for (int i = 0; i < textBackgroundColorOptions.length; i++){
 			textBackgroundColorOptions[i] = new JMenuItem(textBackgroundColors[i]);
 			textBackgroundColorOptions[i].setFont(font);
 			textBackgroundColorOptions[i].addActionListener(this);
-			textBackgroundColorOptions[i].setBorder(new LineBorder(null));
 			textBackgroundColorBar.add(textBackgroundColorOptions[i]);
 
 		}
@@ -88,7 +87,6 @@ public class GUIQuiz extends JFrame implements ActionListener{
 			outlineColorOptions[i] = new JMenuItem(outlineColors[i]);
 			outlineColorOptions[i].setFont(font);
 			outlineColorOptions[i].addActionListener(this);
-			outlineColorOptions[i].setBorder(new LineBorder(null));
 			buttonOutlineColorBar.add(outlineColorOptions[i]);
 		}
 
@@ -97,6 +95,8 @@ public class GUIQuiz extends JFrame implements ActionListener{
 		east.addActionListener(this);
 		west.addActionListener(this);
 		reset.addActionListener(this);
+
+		blankOutlineColor();
 
 		north.setFont(font);
 		south.setFont(font);
@@ -108,17 +108,6 @@ public class GUIQuiz extends JFrame implements ActionListener{
 		textColorBar.setFont(font);
 		textBackgroundColorBar.setFont(font);
 		buttonOutlineColorBar.setFont(font);
-
-		north.setBorder(new LineBorder(null));
-		south.setBorder(new LineBorder(null));
-		east.setBorder(new LineBorder(null));
-		west.setBorder(new LineBorder(null));
-		reset.setBorder(new LineBorder(null));
-		fontBar.setBorder(new LineBorder(null));
-		fontSizeBar.setBorder(new LineBorder(null));
-		textColorBar.setBorder(new LineBorder(null));
-		textBackgroundColorBar.setBorder(new LineBorder(null));
-		buttonOutlineColorBar.setBorder(new LineBorder(null));
 
 		textArea.setFont(font);
 		textArea.setBackground(null);
@@ -185,7 +174,7 @@ public class GUIQuiz extends JFrame implements ActionListener{
 		if (e.getSource() == textBackgroundColorOptions[2])
 			changeBackgroundTextColor(textBackgroundColors[2]);
 		if (e.getSource() == outlineColorOptions[0])
-			changeOutlineColor(outlineColors[0]);
+			blankOutlineColor();
 		if (e.getSource() == outlineColorOptions[1])
 			changeOutlineColor(outlineColors[1]);
 		if (e.getSource() == outlineColorOptions[2])
@@ -202,14 +191,36 @@ public class GUIQuiz extends JFrame implements ActionListener{
 		changeFontSize(fontSizes[0]);
 		changeTextColor("");
 		changeBackgroundTextColor("");
-		changeOutlineColor("");
+		blankOutlineColor();
 		textArea.setText(null);
+	}
+
+	public void blankOutlineColor(){
+		JButton t = new JButton();
+		Border empty = BorderFactory.createEmptyBorder(t.getBorder().getBorderInsets(t).top, t.getBorder().getBorderInsets(t).left, t.getBorder().getBorderInsets(t).bottom, t.getBorder().getBorderInsets(t).right);
+
+		north.setBorder(empty);
+		south.setBorder(empty);
+		east.setBorder(empty);
+		west.setBorder(empty);
+		reset.setBorder(empty);
+		fontBar.setBorder(empty);
+		fontSizeBar.setBorder(empty);
+		textColorBar.setBorder(empty);
+		textBackgroundColorBar.setBorder(empty);
+		buttonOutlineColorBar.setBorder(empty);
+		for (int i = 0; i < fontSizeOptions.length; i++)
+			fontSizeOptions[i].setBorder(empty);
+		for (int i = 0; i < textColorOptions.length; i++)
+			textColorOptions[i].setBorder(empty);
+		for (int i = 0; i < textBackgroundColorOptions.length; i++)
+			textBackgroundColorOptions[i].setBorder(empty);
+		for (int i = 0; i < outlineColorOptions.length; i++)
+			outlineColorOptions[i].setBorder(empty);
 	}
 
 	public void changeOutlineColor(String color){
 		Color c = Color.BLACK;
-		if (color.equals(outlineColors[0]))
-			c = Color.BLACK;
 		if (color.equals(outlineColors[1]))
 			c = Color.RED;
 		if (color.equals(outlineColors[2]))
@@ -217,7 +228,10 @@ public class GUIQuiz extends JFrame implements ActionListener{
 		if (color.equals(outlineColors[3]))
 			c = new Color((int)(Math.random()*256), (int)(Math.random()*256), (int)(Math.random()*256));
 
-		north.setBorder(new LineBorder(c));
+		JButton t = new JButton();
+		Border border = BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(c, 1), BorderFactory.createEmptyBorder(t.getBorder().getBorderInsets(t).top, t.getBorder().getBorderInsets(t).left, t.getBorder().getBorderInsets(t).bottom, t.getBorder().getBorderInsets(t).right));
+
+		north.setBorder(border);
 		south.setBorder(new LineBorder(c));
 		east.setBorder(new LineBorder(c));
 		west.setBorder(new LineBorder(c));
