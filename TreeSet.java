@@ -40,12 +40,13 @@ public class TreeSet<E extends Comparable<E>>{
     public String preOrder(){
         if (size == 0)
             return "[]";
-        if (string.length() != 0)
-            string = "";
 
+		string = "";
         string += "[";
         preOrder(root);
-        return string.substring(0, string.length()-2) + "]";
+        string = string.substring(0, string.length()-2) + "]";
+
+        return string;
     }
 
     private void preOrder(TreeNode<E> node){
@@ -64,7 +65,9 @@ public class TreeSet<E extends Comparable<E>>{
 
         string += "[";
         inOrder(root);
-        return string.substring(0, string.length()-2) + "]";
+        string = string.substring(0, string.length()-2) + "]";
+
+        return string;
     }
 
     private void inOrder(TreeNode<E> node){
@@ -83,8 +86,10 @@ public class TreeSet<E extends Comparable<E>>{
 
         string += "[";
         postOrder(root);
-        return string.substring(0, string.length()-2) + "]";
-    }
+        string = string.substring(0, string.length()-2) + "]";
+
+        return string;
+	}
 
     private void postOrder(TreeNode<E> node){
         if (node != null){
@@ -94,22 +99,30 @@ public class TreeSet<E extends Comparable<E>>{
         }
     }
 
+    public boolean contains(E value){
+		return contains(root, value);
+	}
+
     private boolean contains(TreeNode<E> node, E value){
         if (node == null)
             return false;
-        if (node.getValue() == value)
+        if (node.getValue().equals(value))
             return true;
         if (node.getValue().compareTo(value) > 0)
-            contains(node.getLeft(), value);
+            return contains(node.getLeft(), value);
         else
-            contains(node.getRight(), value);
-        return false;
+            return contains(node.getRight(), value);
     }
 
+    public E minValue(){
+		return minValue(root);
+	}
+
     private E minValue(TreeNode<E> node){
-        if (node.getLeft() != null)
-            minValue(node.getLeft());
-        return node.getValue();
+        if (node.getLeft() == null)
+			return node.getValue();
+
+		return minValue(node.getLeft());
     }
 
     public void remove(E value){
@@ -143,7 +156,7 @@ public class TreeSet<E extends Comparable<E>>{
                 return node.getLeft();
             else{
                 E temp = minValue(node.getRight());
-                node = new TreeNode<E>(temp);
+                node.setValue(temp);
                 node.setRight(remove(node.getRight(), temp));
             }
         }
@@ -153,6 +166,27 @@ public class TreeSet<E extends Comparable<E>>{
     public int size(){
         return size;
     }
+
+    public E getRoot(){
+		return root.getValue();
+	}
+
+	/***********************************************/
+	public void rotateLeft(){
+		if (root.getLeft() == null)
+			return;
+
+		rotateLeft(root);
+	}
+
+	private void rotateLeft(TreeNode<E> node){
+		TreeNode<E> temp = node;
+
+		temp.setLeft(temp.getLeft().getRight());
+		root = node.getLeft();
+		root.setRight(temp);
+	}
+	/***********************************************/
 
 	private class TreeNode<E extends Comparable<E>>{
 		private TreeNode<E> left;
@@ -183,6 +217,10 @@ public class TreeSet<E extends Comparable<E>>{
 
 		public E getValue(){
 			return value;
+		}
+
+		public void setValue(E value){
+			this.value = value;
 		}
 
 		public String toString(){
