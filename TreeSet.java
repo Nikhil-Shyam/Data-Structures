@@ -60,9 +60,8 @@ public class TreeSet<E extends Comparable<E>>{
     public String inOrder(){
         if (size == 0)
             return "[]";
-        if (string.length() != 0)
-            string = "";
 
+		string = "";
         string += "[";
         inOrder(root);
         string = string.substring(0, string.length()-2) + "]";
@@ -81,9 +80,8 @@ public class TreeSet<E extends Comparable<E>>{
     public String postOrder(){
         if (size == 0)
             return "[]";
-        if (string.length() != 0)
-            string = "";
 
+		string = "";
         string += "[";
         postOrder(root);
         string = string.substring(0, string.length()-2) + "]";
@@ -114,9 +112,9 @@ public class TreeSet<E extends Comparable<E>>{
             return contains(node.getRight(), value);
     }
 
-    public E minValue(){
+    /*public E minValue(){
 		return minValue(root);
-	}
+	}*/
 
     private E minValue(TreeNode<E> node){
         if (node.getLeft() == null)
@@ -125,19 +123,21 @@ public class TreeSet<E extends Comparable<E>>{
 		return minValue(node.getLeft());
     }
 
-    public void remove(E value){
+    public boolean remove(E value){
         if (root == null)
-            return;
+            return false;
         if (contains(root, value)){
             if (root.getLeft() == null && root.getRight() == null){
                 root = null;
                 size = 0;
-                return;
+                return true;
             }else{
                 size--;
                 root = remove(root, value);
+                return true;
             }
         }
+        return false;
     }
 
     private TreeNode<E> remove(TreeNode<E> node, E value){
@@ -171,22 +171,33 @@ public class TreeSet<E extends Comparable<E>>{
 		return root.getValue();
 	}
 
-	/***********************************************/
-	public void rotateLeft(){
+	public void rotateRight(){
 		if (root.getLeft() == null)
+			return;
+
+		rotateRight(root);
+	}
+
+	private void rotateRight(TreeNode<E> node){
+		root = node.getLeft();
+		TreeNode<E> temp = root.getRight();
+		root.setRight(node);
+		root.getRight().setLeft(temp);
+	}
+
+	public void rotateLeft(){
+		if (root.getRight() == null)
 			return;
 
 		rotateLeft(root);
 	}
 
 	private void rotateLeft(TreeNode<E> node){
-		TreeNode<E> temp = node;
-
-		temp.setLeft(temp.getLeft().getRight());
-		root = node.getLeft();
-		root.setRight(temp);
+		root = node.getRight();
+		TreeNode<E> temp = root.getLeft();
+		root.setLeft(node);
+		root.getLeft().setRight(temp);
 	}
-	/***********************************************/
 
 	private class TreeNode<E extends Comparable<E>>{
 		private TreeNode<E> left;
