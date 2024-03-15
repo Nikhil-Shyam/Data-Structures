@@ -9,31 +9,32 @@ public class TreeSet<E extends Comparable<E>>{
         string = "";
     }
 
-	public void add(E value){
+	public boolean add(E value){
 		if (root == null){
 			root = new TreeNode<E>(value);
 			size++;
+			return true;
 		}else
-			add(root, value);
+			return add(root, value);
 	}
 
-	private void add(TreeNode<E> node, E value){
-		if (node.getValue() == value)
-			return;
+	private boolean add(TreeNode<E> node, E value){
+		if (node.getValue().equals(value))
+			return false;
 		if (node.getValue().compareTo(value) > 0){
 			if (node.getLeft() == null){
 				node.setLeft(new TreeNode<E>(value));
 				size++;
-				return;
+				return true;
 			}else
-				add(node.getLeft(), value);
+				return add(node.getLeft(), value);
 		}else{
 			if (node.getRight() == null){
 				node.setRight(new TreeNode<E>(value));
 				size++;
-				return;
+				return true;
 			}else
-				add(node.getRight(), value);
+				return add(node.getRight(), value);
 		}
 	}
 
