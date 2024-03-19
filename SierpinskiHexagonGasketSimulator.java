@@ -56,7 +56,9 @@ public class SierpinskiHexagonGasketSimulator extends JPanel implements KeyListe
 			else
 				corner = point6;
 
-            ranPoint = new Point((corner.getX() + ranPoint.getX())/2, (corner.getY() + ranPoint.getY())/2, color);
+			int x = ranPoint.getX()+(int)((corner.getX() - ranPoint.getX())*0.65);
+			int y = ranPoint.getY()+(int)((corner.getY() - ranPoint.getY())*0.65);
+            ranPoint = new Point(x, y, color);
             pointList.add(ranPoint);
         }
         repaint();
@@ -99,7 +101,7 @@ public class SierpinskiHexagonGasketSimulator extends JPanel implements KeyListe
         if (e.getKeyCode() == 32)
 			addPoint();
         if (e.getKeyCode() == 53)
-            numPoints = 5;
+            numPoints += 5;
         if (e.getKeyCode() == 49)
 			numPoints = 1;
     }
